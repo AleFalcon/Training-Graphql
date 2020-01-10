@@ -32,6 +32,9 @@ gem 'rollbar'
 gem 'sidekiq'
 gem 'sidekiq-failures'
 gem 'rails-i18n', '~> 6.0.0'
+gem 'search_object', '1.2.0'
+gem 'search_object_graphql', '0.1'
+gem 'httparty', '~> 0.16.4'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
