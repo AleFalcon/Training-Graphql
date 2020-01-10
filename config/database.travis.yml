@@ -1,0 +1,6 @@
+test: &test
+  adapter: postgresql
+  encoding: unicode
+  database: rails-graphql-bootstrap_test
+  username: rails-graphql-bootstrap
+  password: rails-graphql-bootstrap

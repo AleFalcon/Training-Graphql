@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+# Changes App name
+app_name = ARGV.first
+
+puts "Setting App name: #{app_name}..."
+Dir.glob('**/*', File::FNM_DOTMATCH).reject { |f| f['.git'] || f['script'] }.each do |name|
+  next unless File.file?(name) && name != '.DS_Store'
+
+  out = File.read(name).gsub('rails-graphql-bootstrap', app_name)
+  out = out.gsub('RailsGraphqlBootstrap', app_name.tr('-', '_').split('_').map(&:capitalize).join)
+  File.open(name, 'w+') do |f|
+    f << out
+  end
+end
+
+# Removes Gitter and LICENSE
+readme = File.read('README.md')
+readme.gsub!(
+  '[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Wolox' \
+  '/rails-graphql-bootstrap?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_' \
+  "content=badge)\n",
+  ''
+)
+readme.gsub!('Kickoff for Rails web applications.', '')
+readme.gsub!('### Application Setup', '')
+readme.gsub!('Run `./script/bootstrap app_name` where `app_name` is your application name.', '')
+readme.gsub!("\n\n\n\n\n\nYour app is ready. Happy coding!", '')
+readme.gsub!(/\n\n## License((.)*(\n)*)*$/, '')
+File.open('README.md', 'w') { |file| file.puts(readme) }
+File.delete('LICENSE')
+
+puts 'Done'
