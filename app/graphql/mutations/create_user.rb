@@ -12,6 +12,7 @@ module Mutations
     type Types::UserType
 
     def resolve(name: nil, auth_provider: nil)
+      byebug
       User.create!(
         name: name,
         email: auth_provider&.[](:email)&.[](:email),
