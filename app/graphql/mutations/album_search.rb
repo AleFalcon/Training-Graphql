@@ -2,7 +2,6 @@ require 'httparty'
 
 module Mutations
   class AlbumSearch < BaseMutation
-
     argument :album_id, String, required: true
 
     type Types::AlbumType
