@@ -33,3 +33,10 @@ Naming/VariableNumber:
 
 RSpec/MultipleExpectations:
   Enabled: false
+
+Naming/VariableName:
+  Enabled: false
+
+Naming/UncommunicativeMethodParamName:
+  Enabled: false
+
