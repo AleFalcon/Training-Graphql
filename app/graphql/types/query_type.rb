@@ -1,11 +1,13 @@
 module Types
   class QueryType < Types::BaseObject
+    URL_FOR_ALBUM = 'https://jsonplaceholder.typicode.com/albums/'.freeze
+
     field :album, AlbumType, null: false do
-      argument :album_id, String, required: true
+      argument :id, ID, required: true
     end
 
-    def album(album_id:)
-      HTTParty.get(URL_FOR_ALBUM + album_id).parsed_response
+    def album(id:)
+      HTTParty.get(URL_FOR_ALBUM + id).parsed_response.transform_keys(&:underscore)
     end
   end
 end
