@@ -1,8 +1,8 @@
-def mutation_get_album(albumId:)
+def query_get_album(albumId:)
   <<~GQL
-    mutation{
-      albumId(albumId: "#{albumId}"){
-        id
+    query{
+      getAlbum(albumId:"#{albumId}"){
+       id
         title
       }
     }
