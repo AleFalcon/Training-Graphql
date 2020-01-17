@@ -13,11 +13,11 @@ module Types
 
           it 'return the id album' do
             
-            expect(JSON.parse(response.body)['data']['getAlbum']['id']).to eq(1)
+            expect(JSON.parse(response.body)['data']['album']['id']).to eq(1)
           end
 
           it 'return the title album' do
-            expect(JSON.parse(response.body)['data']['getAlbum']['title'])
+            expect(JSON.parse(response.body)['data']['album']['title'])
               .to eql('delectus aut autem')
           end
         end
