@@ -1,7 +1,7 @@
 require 'search_object/plugin/graphql'
 
 module Resolvers
-  class ListAllAlbums
+  class ListAlbums
     include SearchObject.module(:graphql)
 
     scope { HTTParty.get('https://jsonplaceholder.typicode.com/albums').parsed_response }
