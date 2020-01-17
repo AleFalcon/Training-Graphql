@@ -4,12 +4,23 @@ module Resolvers
   class ListAlbums
     include SearchObject.module(:graphql)
 
-    scope { HTTParty.get('https://jsonplaceholder.typicode.com/albums').parsed_response }
+    scope { HTTParty.get(URL_FOR_PHOTOS).parsed_response }
 
-    type types[Types::AlbumType]
+    type types[Types::AlbumWithPhotoType]
 
     def apply_filter
-      scope
+      albums = HTTParty.get(URL_FOR_ALBUM).parsed_response
+      add_photos_to_album(scope, albums)
+    end
+
+    def add_photos_to_album(list, albums)
+      byebug
+      albums.each do |elem|
+        albums.photos = []
+        list.each do |photo|
+          albums.photos << elem if elem['id'].include? photo['albumId']
+        end
+      end
     end
   end
 end
