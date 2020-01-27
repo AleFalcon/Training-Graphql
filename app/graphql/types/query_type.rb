@@ -3,7 +3,7 @@ module Types
     ENDPOINT = 'https://jsonplaceholder.typicode.com/'.freeze
 
     field :albums, [AlbumType], null: false do
-      description 'Find a user by id'
+      description 'List all albums'
     end
 
     def albums
