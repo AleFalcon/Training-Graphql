@@ -1,9 +1,16 @@
-def query_get_album(albumId:)
+def query_get_album(id:)
   <<~GQL
     query{
-      album(albumId:"#{albumId}"){
-       id
+      album(id:"#{id}"){
+        id
         title
+        userId
+        photos {
+          id
+          title
+          url
+          thumbnailUrl
+        }
       }
     }
   GQL
