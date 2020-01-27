@@ -1,9 +1,16 @@
-def mutation_list_album
+def query_list_album
   <<~GQL
     query{
-      allAlbums(){
+      albums(){
+        userId
         id
         title
+          photos {
+            id
+            title
+            url
+            thumbnailUrl
+        }
       }
     }
   GQL
