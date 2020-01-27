@@ -1,21 +1,23 @@
 module Types
   class QueryType < Types::BaseObject
+    ENDPOINT = 'https://jsonplaceholder.typicode.com/'.freeze
+
     field :album, AlbumType, null: false do
-      argument :album_id, String, required: true
+      argument :id, ID, required: true
     end
 
-    def album(album_id:)
-      photos = HTTParty.get(URL_FOR_PHOTOS).parsed_response
-      album = HTTParty.get(URL_FOR_ALBUM + album_id).parsed_response
-      add_photos_to_album(photos, album, album_id)
-    end
-
-    def add_photos_to_album(photos, album, album_id)
-      album['photos'] = []
-      photos.each do |photo|
-        album['photos'] << photo if album_id.to_i == photo['albumId']
-      end
+    def album(id:)
+      album = parse_album(HTTParty.get("#{ENDPOINT}albums/#{id}"))
+      album[:photos] = parse_photos(HTTParty.get("#{ENDPOINT}photos?albumId=#{id}"))
       album
+    end
+
+    def parse_album(response)
+      response.parsed_response.transform_keys(&:underscore)
+    end
+
+    def parse_photos(response)
+      response.parsed_response.map { |x| x.transform_keys(&:underscore) }
     end
   end
 end
