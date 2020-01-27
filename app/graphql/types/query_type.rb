@@ -1,5 +1,9 @@
 module Types
   class QueryType < Types::BaseObject
-    field :all_albums, function: Resolvers::ListAlbums
+    ENDPOINT = 'https://jsonplaceholder.typicode.com/'.freeze
+
+    field :albums, [AlbumType], function: Resolvers::ListAlbums do
+      description 'Filtered list of albums'
+    end
   end
 end
