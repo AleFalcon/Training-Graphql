@@ -6,7 +6,10 @@ module Resolvers
     include SearchObject.module(:graphql)
 
     # scope is starting point for search
-    scope { HTTParty.get("#{ENDPOINT}albums/").parsed_response }
+    scope do
+      HTTParty.get("#{ENDPOINT}albums/")
+              .parsed_response.map { |x| x.transform_keys(&:underscore) }
+    end
 
     type types[Types::AlbumType]
 

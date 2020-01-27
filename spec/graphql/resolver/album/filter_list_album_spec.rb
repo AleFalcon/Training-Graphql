@@ -1,38 +1,54 @@
 require 'rails_helper'
 require 'support/graphql/fixtures/graphql_album_helper'
 
-module Resolvers
+module Types
   module Albums
-    RSpec.describe ListAlbums, type: :request do
+    RSpec.describe QueryType, type: :request do
       describe '.resolve' do
         context 'when list all album' do
           before do
             filter_list_album_request_success
+            mocked_filtered_photos_album_1_success
+            mocked_filtered_photos_album_79_success
             post '/graphql', params: { query: query_filter_list_album(title: 'quidem') }
           end
 
           it 'return the count albums of list' do
-            expect(JSON.parse(response.body)['data']['allAlbums'].count).to eq(2)
+            expect(JSON.parse(response.body)['data']['albums'].count).to eq(2)
           end
 
-          it 'return the title of first album' do
-            expect(JSON.parse(response.body)['data']['allAlbums'][0]['title'])
+          it 'return the id album of first album' do
+            expect(JSON.parse(response.body)['data']['albums'].first['id']).to eq(1)
+          end
+
+          it 'return the title album of first album' do
+            expect(JSON.parse(response.body)['data']['albums'].first['title'])
               .to eql('quidem molestiae enim')
           end
 
-          it 'return the id of first album' do
-            expect(JSON.parse(response.body)['data']['allAlbums'][0]['id'])
-              .to eq(1)
+          it 'return the userId album of first album' do
+            expect(JSON.parse(response.body)['data']['albums'].first['userId'])
+              .to eql('1')
           end
 
-          it 'return the title of last album' do
-            expect(JSON.parse(response.body)['data']['allAlbums'][1]['title'])
-              .to eql('ipsa quae voluptas natus ut suscipit soluta quia quidem')
+          it 'return the count of photos of first album' do
+            expect(JSON.parse(response.body)['data']['albums'].first['photos'].count)
+              .to eq(6)
           end
 
-          it 'return the id of last album' do
-            expect(JSON.parse(response.body)['data']['allAlbums'][1]['id'])
-              .to eq(79)
+          it 'return the first photos' do
+            (expect(JSON.parse(response.body)['data']['albums']
+            .first['photos'].first['id'])
+              .to eql('1')) &&
+              (expect(JSON.parse(response.body)['data']['albums']
+              .first['photos'].first['title'])
+                .to eql('accusamus beatae ad facilis cum similique qui sunt')) &&
+              (expect(JSON.parse(response.body)['data']['albums']
+              .first['photos'].first['url'])
+                .to eql('https://via.placeholder.com/600/92c952')) &&
+              (expect(JSON.parse(response.body)['data']['albums']
+              .first['photos'].first['thumbnailUrl'])
+                .to eql('https://via.placeholder.com/150/92c952'))
           end
         end
       end

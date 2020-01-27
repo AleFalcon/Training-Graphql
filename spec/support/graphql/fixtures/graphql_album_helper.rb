@@ -1,9 +1,16 @@
 def query_filter_list_album(title:)
   <<~GQL
     query{
-      allAlbums(filter: {title: "#{title}"}){
+      albums(filter: {title: "#{title}"}){
+        userId
         id
         title
+        photos {
+          id
+          title
+          url
+          thumbnailUrl
+        }
       }
     }
   GQL
