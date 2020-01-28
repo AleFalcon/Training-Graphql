@@ -1,12 +1,13 @@
 module Types
   class QueryType < Types::BaseObject
-    # Add root-level fields here.
-    # They will be entry points for queries on your schema.
+    ENDPOINT = 'https://jsonplaceholder.typicode.com/'.freeze
 
-    # TODO: remove me
-    field :test_field, String, null: false, description: 'An example field added by the generator'
-    def test_field
-      'Hello Wolox!'
+    field :album, AlbumType, null: false do
+      argument :id, ID, required: true
+    end
+
+    def album(id:)
+      AlbumsService.new(ENDPOINT).get_album(id)
     end
   end
 end
