@@ -7,17 +7,7 @@ module Types
     end
 
     def album(id:)
-      album = parse_album(HTTParty.get("#{ENDPOINT}albums/#{id}"))
-      album[:photos] = parse_photos(HTTParty.get("#{ENDPOINT}photos?albumId=#{id}"))
-      album
-    end
-
-    def parse_album(response)
-      response.parsed_response.transform_keys(&:underscore)
-    end
-
-    def parse_photos(response)
-      response.parsed_response.map { |x| x.transform_keys(&:underscore) }
+      AlbumsService.new.get_album(id, ENDPOINT)
     end
   end
 end
