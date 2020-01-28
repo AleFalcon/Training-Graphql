@@ -1,8 +1,11 @@
 class AlbumsService
+  def initialize(params)
+    @endopint = params
+  end
 
-  def get_album(id, endpoint)
-    album = parse_album(HTTParty.get("#{endpoint}albums/#{id}"))
-    album[:photos] = parse_photos(HTTParty.get("#{endpoint}photos?albumId=#{id}"))
+  def get_album(id)
+    album = parse_album(HTTParty.get("#{@endpoint}albums/#{id}"))
+    album[:photos] = parse_photos(HTTParty.get("#{@endpoint}photos?albumId=#{id}"))
     album
   end
 
