@@ -1,6 +1,6 @@
 class AlbumsService
   def initialize(params)
-    @endopint = params
+    @endpoint = params
   end
 
   def get_album(id)
