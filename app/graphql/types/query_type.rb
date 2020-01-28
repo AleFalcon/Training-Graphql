@@ -7,7 +7,7 @@ module Types
     end
 
     def album(id:)
-      AlbumsService.new.get_album(id, ENDPOINT)
+      AlbumsService.new(ENDPOINT).get_album(id)
     end
   end
 end
