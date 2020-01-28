@@ -4,6 +4,13 @@ module Types
 
     field :albums, [AlbumType], function: Resolvers::ListAlbums do
       description 'Filtered list of albums'
+
+    field :album, AlbumType, null: false do
+      argument :id, ID, required: true
+    end
+
+    def album(id:)
+      AlbumsService.new(ENDPOINT).get_album(id)
     end
   end
 end
