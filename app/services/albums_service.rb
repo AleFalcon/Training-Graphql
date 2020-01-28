@@ -1,5 +1,4 @@
 class AlbumsService
-
   def get_album(id, endpoint)
     album = parse_album(HTTParty.get("#{endpoint}albums/#{id}"))
     album[:photos] = parse_photos(HTTParty.get("#{endpoint}photos?albumId=#{id}"))
