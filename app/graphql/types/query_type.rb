@@ -4,6 +4,7 @@ module Types
 
     field :albums, [AlbumType], function: Resolvers::ListAlbums do
       description 'Filtered list of albums'
+    end
 
     field :album, AlbumType, null: false do
       argument :id, ID, required: true
