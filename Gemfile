@@ -28,7 +28,7 @@ gem 'rack-cors'
 gem 'rack-attack'
 
 gem 'rollbar'
-
+gem 'pundit'
 gem 'sidekiq'
 gem 'sidekiq-failures'
 gem 'rails-i18n', '~> 6.0.0'
