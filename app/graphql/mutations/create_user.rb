@@ -8,14 +8,22 @@ module Mutations
     type Types::UserType
 
     def resolve(first_name: nil, last_name: nil, email: nil, password: nil)
-      User.create!(
+      user = create_hash_user(first_name, last_name, email, password)
+      result = UserPolicy.new(nil, user).create?
+      if result[:result]
+        User.create!(user)
+      else
+        GraphQL::ExecutionError.new("Invalid input: #{result[:message]}")
+      end
+    end
+
+    def create_hash_user(first_name, last_name, email, password)
+      {
         first_name: first_name,
         last_name: last_name,
         email: email,
         password: password
-      )
-    rescue ActiveRecord::RecordInvalid => e
-      GraphQL::ExecutionError.new("Invalid input: #{e.record.errors.full_messages.join(', ')}")
+      }
     end
   end
 end
