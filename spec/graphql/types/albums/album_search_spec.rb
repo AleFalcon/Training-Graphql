@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'support/graphql/fixtures/graphql_album_helper'
 
 module Types
   module Albums
