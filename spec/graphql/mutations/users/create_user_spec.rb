@@ -8,6 +8,7 @@ module Mutations
           let(:user) { build(:user) }
 
           before do
+            user.email = user.first_name + '@wolox.com.ar'
             post '/graphql', params: { query: mutation_creation_user(first_name: user.first_name,
                                                                      last_name: user.last_name,
                                                                      email: user.email,
