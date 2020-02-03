@@ -1,10 +1,26 @@
 require 'rails_helper'
+include MockHelper
 
 module Types
   module Albums
     RSpec.describe QueryType, type: :request do
       describe '.resolve' do
         context 'when get a album by id' do
+          let(:expect_photo) do
+            { 'id' => '1', 'thumbnailUrl' => 'https://via.placeholder.com/150/92c952',
+              'title' => 'accusamus beatae ad facilis cum similique qui sunt',
+              'url' => 'https://via.placeholder.com/600/92c952' }
+          end
+
+          let(:expect_album) do
+            {
+              "id": '1',
+              "userId": '1',
+              "title": 'delectus aut autem',
+              "completed": false
+            }
+          end
+
           before do
             album_search_request_success
             photos_for_album_success
@@ -12,17 +28,17 @@ module Types
           end
 
           it 'return the id album' do
-            expect(JSON.parse(response.body)['data']['album']['id']).to eql('1')
+            expect(JSON.parse(response.body)['data']['album']['id']).to eql(expect_album[:id])
           end
 
           it 'return the title album' do
             expect(JSON.parse(response.body)['data']['album']['title'])
-              .to eql('delectus aut autem')
+              .to eql(expect_album[:title])
           end
 
           it 'return the userId album' do
             expect(JSON.parse(response.body)['data']['album']['userId'])
-              .to eql('1')
+              .to eql(expect_album[:userId])
           end
 
           it 'return the count of photos' do
@@ -31,14 +47,8 @@ module Types
           end
 
           it 'return the first photos' do
-            (expect(JSON.parse(response.body)['data']['album']['photos'].first['id'])
-              .to eql('1')) &&
-              (expect(JSON.parse(response.body)['data']['album']['photos'].first['title'])
-                .to eql('accusamus beatae ad facilis cum similique qui sunt')) &&
-              (expect(JSON.parse(response.body)['data']['album']['photos'].first['url'])
-                .to eql('https://via.placeholder.com/600/92c952')) &&
-              (expect(JSON.parse(response.body)['data']['album']['photos'].first['thumbnailUrl'])
-                .to eql('https://via.placeholder.com/150/92c952'))
+            (expect(JSON.parse(response.body)['data']['album']['photos'].first)
+              .to eq expect_photo)
           end
         end
 
