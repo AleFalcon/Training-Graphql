@@ -38,7 +38,7 @@ module Types
             post '/graphql', params: { query: query_get_album(id: '10000000') }
           end
 
-          it 'return nil on fata field' do
+          it 'return nil on data field' do
             expect(JSON.parse(response.body)['data']).to eq(nil)
           end
 
