@@ -9,22 +9,33 @@ module Mutations
 
     def resolve(email: nil)
       user = User.find_by email: email[:email]
-      return unless validations(email, user)
+      return unless validations(email[:email], email[:password], user)
 
-      crypt = ActiveSupport::MessageEncryptor.new(Rails.application
-        .secrets[:secret_key_base].byteslice(0..31))
-      token = crypt.encrypt_and_sign("user-id:#{user.id}")
+      token = generate_token(user)
 
-      return unless context[:session][:token] != token
-
-      context[:session][:token] = token
-      { token: context[:session][:token] }
+      validation_token(context[:session][:token], token)
     end
 
-    def valitadions(email, user)
+    private
+
+    def generate_token(user)
+      crypt = ActiveSupport::MessageEncryptor.new(Rails.application
+        .secrets[:secret_key_base].byteslice(0..31))
+      crypt.encrypt_and_sign("user-id:#{user.id}")
+    end
+
+    def validation_token(session_token, token)
+      return unless session_token != token
+
+      { token: token }
+    end
+
+    def validations(email, password, user)
       return unless validation_email(email)
       return unless user
-      return unless user.authenticate(email[:password])
+      return unless user.authenticate(password)
+
+      true
     end
 
     def validation_email(email)

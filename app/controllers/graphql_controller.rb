@@ -19,7 +19,10 @@ class GraphqlController < ApplicationController
   private
 
   def generate_context(session)
-    Hash.new(session: session, current_user: current_user)
+    {
+      session: session,
+      current_user: current_user
+    }
   end
 
   def current_user
