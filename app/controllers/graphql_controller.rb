@@ -1,57 +1,58 @@
-def execute
-  context = {
-    # Query context goes here, for example:
-    # current_user: current_user,
-  }
-  result = RailsGraphqlBootstrapSchema.execute(
-    query, variables: variables, context: context, operation_name: operation_name
-  )
-  render json: result
-rescue StandardError => e
-  raise e unless Rails.env.development?
+class GraphqlController < ApplicationController
+  def execute
+    context = {
+      # Query context goes here, for example:
+      # current_user: current_user,
+    }
+    result = RailsGraphqlBootstrapSchema.execute(
+      query, variables: variables, context: context, operation_name: operation_name
+    )
+    render json: result
+  rescue StandardError => e
+    raise e unless Rails.env.development?
 
-  handle_error_in_development e
-end
-
-private
-
-# Handle form data, JSON body, or a blank value
-def ensure_hash(ambiguous_param)
-  case ambiguous_param
-  when String
-    handle_param_string(ambiguous_param)
-  when Hash, ActionController::Parameters
-    ambiguous_param
-  when nil
-    {}
-  else
-    raise ArgumentError, "Unexpected parameter: #{ambiguous_param}"
+    handle_error_in_development e
   end
-end
 
-def handle_param_string(param)
-  return ensure_hash(JSON.parse(param)) if param.present?
+  private
 
-  {}
-end
+  # Handle form data, JSON body, or a blank value
+  def ensure_hash(ambiguous_param)
+    case ambiguous_param
+    when String
+      handle_param_string(ambiguous_param)
+    when Hash, ActionController::Parameters
+      ambiguous_param
+    when nil
+      {}
+    else
+      raise ArgumentError, "Unexpected parameter: #{ambiguous_param}"
+    end
+  end
 
-def handle_error_in_development(err)
-  logger.error err.message
-  logger.error err.backtrace.join("\n")
+  def handle_param_string(param)
+    return ensure_hash(JSON.parse(param)) if param.present?
 
-  render json: { error: { message: err.message, backtrace: err.backtrace }, data: {} },
-         status: :internal_server_error
-end
+    {}
+  end
 
-def variables
-  ensure_hash(params[:variables])
-end
+  def handle_error_in_development(err)
+    logger.error err.message
+    logger.error err.backtrace.join("\n")
 
-def query
-  params[:query]
-end
+    render json: { error: { message: err.message, backtrace: err.backtrace }, data: {} },
+           status: :internal_server_error
+  end
 
-def operation_name
-  params[:operationName]
-end
+  def variables
+    ensure_hash(params[:variables])
+  end
+
+  def query
+    params[:query]
+  end
+
+  def operation_name
+    params[:operationName]
+  end
 end
