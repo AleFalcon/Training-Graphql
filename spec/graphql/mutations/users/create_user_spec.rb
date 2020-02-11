@@ -19,11 +19,11 @@ module Mutations
             expect(User.count).to eq(1)
           end
 
-          it 'return the user first_name' do
+          it 'return the user first name' do
             expect(User.last.first_name).to eql(user.first_name)
           end
 
-          it 'return the user last_name' do
+          it 'return the user last name' do
             expect(User.last.last_name).to eql(user.last_name)
           end
 
