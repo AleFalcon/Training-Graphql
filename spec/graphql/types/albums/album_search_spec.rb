@@ -1,5 +1,4 @@
 require 'rails_helper'
-include MockHelper
 
 module Types
   module Albums
@@ -13,12 +12,11 @@ module Types
           end
 
           let(:expect_album) do
-            {
-              "id": '1',
-              "userId": '1',
-              "title": 'delectus aut autem',
-              "completed": false
-            }
+            { 'id' => '1',
+              'photos' => [
+                expect_photo
+              ],
+              'title' => 'delectus aut autem', 'userId' => '1' }
           end
 
           before do
@@ -27,23 +25,14 @@ module Types
             post '/graphql', params: { query: query_get_album(id: '1') }
           end
 
-          it 'return the id album' do
-            expect(JSON.parse(response.body)['data']['album']['id']).to eql(expect_album[:id])
-          end
-
-          it 'return the title album' do
-            expect(JSON.parse(response.body)['data']['album']['title'])
-              .to eql(expect_album[:title])
-          end
-
-          it 'return the userId album' do
-            expect(JSON.parse(response.body)['data']['album']['userId'])
-              .to eql(expect_album[:userId])
+          it 'return the album' do
+            (expect(JSON.parse(response.body)['data']['album'])
+            .to eq expect_album)
           end
 
           it 'return the count of photos' do
             expect(JSON.parse(response.body)['data']['album']['photos'].count)
-              .to eq(50)
+              .to eq(1)
           end
 
           it 'return the first photos' do
