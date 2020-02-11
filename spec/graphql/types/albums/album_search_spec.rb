@@ -29,11 +29,6 @@ module Types
             (expect(JSON.parse(response.body)['data']['album'])
             .to eq expect_album)
           end
-
-          it 'return the count of photos' do
-            expect(JSON.parse(response.body)['data']['album']['photos'].count)
-              .to eq(1)
-          end
         end
 
         context 'when dont get a album by id' do
@@ -43,11 +38,11 @@ module Types
             post '/graphql', params: { query: query_get_album(id: '10000000') }
           end
 
-          it 'return the id album' do
+          it 'return nil on fata field' do
             expect(JSON.parse(response.body)['data']).to eq(nil)
           end
 
-          it 'return the title album' do
+          it 'return the errors field' do
             expect(JSON.parse(response.body)['errors'].present?).to be true
           end
         end
