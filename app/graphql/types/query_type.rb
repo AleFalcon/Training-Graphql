@@ -5,13 +5,14 @@ module Types
     field :album, AlbumType, null: false do
       argument :id, ID, required: true
     end
-    
+
     field :albums, [AlbumType], null: false do
       description 'List all albums'
     end
 
     def albums
       AlbumsService.new(ENDPOINT).list_albums
+    end
 
     def album(id:)
       AlbumsService.new(ENDPOINT).get_album(id)

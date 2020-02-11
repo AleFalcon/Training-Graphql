@@ -6,6 +6,7 @@ class AlbumsService
   def list_albums
     albums = parse_albums(HTTParty.get("#{@endpoint}albums/"))
     add_photos_to_album(albums)
+  end
 
   def get_album(id)
     album = parse_album(HTTParty.get("#{@endpoint}albums/#{id}"))
@@ -24,6 +25,7 @@ class AlbumsService
 
   def parse_albums(response)
     response.parsed_response.map { |x| x.transform_keys(&:underscore) }
+  end
 
   def parse_album(response)
     response.parsed_response.transform_keys(&:underscore)
