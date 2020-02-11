@@ -10,7 +10,7 @@ module Types
               'title' => 'accusamus beatae ad facilis cum similique qui sunt',
               'url' => 'https://via.placeholder.com/600/92c952' }
           end
-
+          
           let(:expect_album) do
             { 'id' => '1',
               'photos' => [
@@ -33,11 +33,6 @@ module Types
           it 'return the count of photos' do
             expect(JSON.parse(response.body)['data']['album']['photos'].count)
               .to eq(1)
-          end
-
-          it 'return the first photos' do
-            (expect(JSON.parse(response.body)['data']['album']['photos'].first)
-              .to eq expect_photo)
           end
         end
 
