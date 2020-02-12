@@ -1,8 +1,8 @@
 class AlbumsService
-  attr_reader :endpoint
+  attr_accessor :endpoint
 
   def initialize(params)
-    @endpoint = params
+    self.endpoint = params
   end
 
   def get_album(id)
