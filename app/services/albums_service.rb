@@ -1,16 +1,13 @@
 class AlbumsService
+  attr_reader :endpoint
+
   def initialize(params)
     @endpoint = params
   end
 
-  def list_albums
-    albums = parse_albums(HTTParty.get("#{@endpoint}albums/"))
-    add_photos_to_album(albums)
-  end
-
   def get_album(id)
-    album = parse_album(HTTParty.get("#{@endpoint}albums/#{id}"))
-    album[:photos] = parse_photos(HTTParty.get("#{@endpoint}photos?albumId=#{id}"))
+    album = parse_album(HTTParty.get("#{endpoint}albums/#{id}"))
+    album[:photos] = parse_photos(HTTParty.get("#{endpoint}photos?albumId=#{id}"))
     album
   end
 
@@ -18,7 +15,7 @@ class AlbumsService
 
   def add_photos_to_album(albums)
     albums.each do |elem|
-      elem['photos'] = parse_photos(HTTParty.get("#{@endpoint}photos?albumId=#{elem['id']}"))
+      elem['photos'] = parse_photos(HTTParty.get("#{endpoint}photos?albumId=#{elem['id']}"))
     end
     albums
   end

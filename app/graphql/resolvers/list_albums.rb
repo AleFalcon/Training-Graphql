@@ -2,50 +2,46 @@ require 'search_object/plugin/graphql'
 
 module Resolvers
   class ListAlbums < Types::QueryType
-    # include SearchObject for GraphQL
     include SearchObject.module(:graphql)
 
-    # scope is starting point for search
-    scope { HTTParty.get("#{ENDPOINT}albums/").parsed_response }
+    scope { parse_albums(HTTParty.get("#{ENDPOINT}albums/")) }
 
     type types[Types::AlbumType]
 
-    # inline input type definition for the advance filter
     class AlbumsSort < ::Types::BaseInputObject
-      FielEnum = GraphQL::EnumType.define do
+      FieldEnum = GraphQL::EnumType.define do
         name 'Fields'
         description 'fields by which you can sort'
-        value('TITLE', 'Title of album')
-        value('USER_ID', 'User id of album owner')
-        value('ID', 'Id of album')
+        value('TITLE', 'Title of album', value: 'title')
+        value('USER_ID', 'User id of album owner', value: 'user_id')
+        value('ID', 'Id of album', value: 'id')
       end
 
       OrderEnum = GraphQL::EnumType.define do
         name 'Order'
         description 'Sort by'
-        value('ASC', 'Ascending order')
-        value('DESC', 'Descending order')
+        value('ASC', 'Ascending order', value: 0)
+        value('DESC', 'Descending order', value: 1)
       end
 
       argument :order, OrderEnum, required: false, description: 'Sort by title or user id'
-      argument :field, FielEnum, required: false, description: 'Sort by title or user id'
+      argument :field, FieldEnum, required: false, description: 'Sort by title or user id'
     end
 
-    # when "filter" is passed "apply_filter" would be called to narrow the scope
     option :first, type: types.Int, with: :apply_first
     option :skip, type: types.Int, with: :apply_skip
-    option :orderBy, type: AlbumsSort, required: false
+    option :orderBy, type: AlbumsSort, required: false, with: :list_albums
 
-    # apply_filter recursively loops through "OR" branches
     def list_albums(scope, value)
-      add_photos_to_album(normalize_filters(scope, value))
+      add_photos_to_album(order_array(scope, value))
     end
 
-    def normalize_filters(list, value, result = [])
-      list.each do |elem|
-        result << elem if elem['title'].include? value.to_h[:title]
+    def order_array(list, value)
+      if value.to_h[:order].zero?
+        list.sort_by! { |x| x[value.to_h[:field].to_s] }
+      else
+        list.sort_by { |x| x[value.to_h[:field].to_s] }.reverse!
       end
-      result
     end
 
     def add_photos_to_album(albums)
