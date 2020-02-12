@@ -6,12 +6,8 @@ module Types
       argument :id, ID, required: true
     end
 
-    field :albums, [AlbumType], null: false do
+    field :albums, [AlbumType], function: Resolvers::ListAlbums do
       description 'List all albums'
-    end
-
-    def albums
-      AlbumsService.new(ENDPOINT).list_albums
     end
 
     def album(id:)
