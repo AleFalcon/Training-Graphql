@@ -4,7 +4,7 @@ module Resolvers
   class ListAlbums < Types::QueryType
     include SearchObject.module(:graphql)
 
-    scope { parse_albums(HTTParty.get("#{ENDPOINT}albums/")) }
+    scope { AlbumsService.new(ENDPOINT).list_all_albums }
 
     type types[Types::AlbumType]
 
@@ -32,8 +32,16 @@ module Resolvers
     option :skip, type: types.Int, with: :apply_skip
     option :orderBy, type: AlbumsSort, required: false, with: :list_albums
 
+    def apply_first(scope, value)
+      scope.take(value)
+    end
+
+    def apply_skip(scope, value)
+      scope[value..scope.length]
+    end
+
     def list_albums(scope, value)
-      add_photos_to_album(order_array(scope, value))
+      PhotosService.new(ENDPOINT).add_photos_to_album(order_array(scope, value))
     end
 
     def order_array(list, value)
@@ -42,21 +50,6 @@ module Resolvers
       else
         list.sort_by { |x| x[value.to_h[:field].to_s] }.reverse!
       end
-    end
-
-    def add_photos_to_album(albums)
-      albums.each do |elem|
-        elem['photos'] = parse_photos(HTTParty.get("#{ENDPOINT}photos?albumId=#{elem['id']}"))
-      end
-      albums
-    end
-
-    def parse_albums(response)
-      response.parsed_response.map { |x| x.transform_keys(&:underscore) }
-    end
-
-    def parse_photos(response)
-      response.parsed_response.map { |x| x.transform_keys(&:underscore) }
     end
   end
 end
