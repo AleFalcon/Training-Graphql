@@ -1,7 +1,7 @@
 require 'search_object/plugin/graphql'
 
-module Resolvers
-  class ListAlbums < Types::QueryType
+module Types
+  class ListAlbums < QueryType
     include SearchObject.module(:graphql)
 
     scope { AlbumsService.new(ENDPOINT).list_all_albums }

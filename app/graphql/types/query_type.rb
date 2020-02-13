@@ -6,7 +6,7 @@ module Types
       argument :id, ID, required: true
     end
 
-    field :albums, [AlbumType], function: Resolvers::ListAlbums do
+    field :albums, [AlbumType], function: ListAlbums do
       description 'List all albums'
     end
 
