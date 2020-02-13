@@ -7,20 +7,19 @@ module Types
         context 'when list all album' do
           let(:expect_photo) do
             {
-              'id'=>'1',
-              'thumbnailUrl'=>'https://via.placeholder.com/150/92c952',
-              'title'=>'accusamus beatae ad facilis cum similique qui sunt',
-              'url'=>'https://via.placeholder.com/600/92c952'
+              'id' => '1',
+              'thumbnailUrl' => 'https://via.placeholder.com/150/92c952',
+              'title' => 'accusamus beatae ad facilis cum similique qui sunt',
+              'url' => 'https://via.placeholder.com/600/92c952'
             }
           end
 
           let(:expect_album) do
-            { 'id'=>'1',
-              'title'=>'quidem molestiae enim',
-              'photos'=>[
+            { 'id' => '1',
+              'title' => 'quidem molestiae enim',
+              'photos' => [
                 expect_photo
-              ]
-            }
+              ] }
           end
 
           before do
