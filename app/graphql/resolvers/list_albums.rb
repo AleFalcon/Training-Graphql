@@ -28,15 +28,15 @@ module Resolvers
       argument :field, FieldEnum, required: false, description: 'Sort by title or user id'
     end
 
-    option :first, type: types.Int, with: :apply_first
-    option :skip, type: types.Int, with: :apply_skip
+    option :offset, type: types.Int, with: :apply_offset
+    option :limit, type: types.Int, with: :apply_limit
     option :orderBy, type: AlbumsSort, required: false, with: :list_albums
 
-    def apply_first(scope, value)
+    def apply_limit(scope, value)
       scope.take(value)
     end
 
-    def apply_skip(scope, value)
+    def apply_offset(scope, value)
       scope[value..scope.length]
     end
 
