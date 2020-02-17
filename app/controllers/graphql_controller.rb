@@ -3,7 +3,6 @@ class GraphqlController < ApplicationController
   # This allows for outside API access while preventing CSRF attacks,
   # but you'll have to authenticate your user separately
   # protect_from_forgery with: :null_session
-
   def execute
     context = generate_context(session)
     result = RailsGraphqlBootstrapSchema.execute(
@@ -26,9 +25,7 @@ class GraphqlController < ApplicationController
   end
 
   def current_user
-    # if we want to change the sign-in strategy, this is the place to do it
     return unless session[:token]
-
     crypt = ActiveSupport::MessageEncryptor.new(Rails.application
       .secrets[:secret_key_base].byteslice(0..31))
     token = crypt.decrypt_and_verify session[:token]
