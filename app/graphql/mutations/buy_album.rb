@@ -1,18 +1,27 @@
 module Mutations
   class BuyAlbum < BaseMutation
 
-    field :album_id, String, null: true
-
     type Types::PurchasedAlbumType
 
     def resolve(album_id: nil)
-      user = create_hash_user(first_name, last_name, email, password)
-      result = UserPolicy.new(nil, user).create?
+      #album = AlbumsService.new(ENDPOINT).get_album(album_id)
+      album = { id: '1', title: 'quidem molestiae enim', user_id: '1' }
+      purchase = create_hash_purchase(album, context[:current_user])
+      byebug
+      result = PurchasedAlbumPolicy.new(context[:current_user], purchase).create?
       unless result[:result]
         raise Pundit::NotAuthorizedError, "not allowed to create? this #{result[:message]}"
       end
 
-      User.create!(user)
+      PurchasedAlbum.create!(user)
+    end
+
+    def create_hash_purchase(album, user_context)
+      {
+        album_id: album[:id],
+        album_title: album[:title],
+        user_id: user_context
+      }
     end
   end
 end
