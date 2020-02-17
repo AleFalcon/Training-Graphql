@@ -8,6 +8,7 @@ module Mutations
           let(:user) { build(:user) }
 
           before do
+            user.email = user.first_name + '@wolox.com.ar'
             post '/graphql', params: { query: mutation_creation_user(first_name: user.first_name,
                                                                      last_name: user.last_name,
                                                                      email: user.email,
@@ -18,11 +19,11 @@ module Mutations
             expect(User.count).to eq(1)
           end
 
-          it 'return the user first_name' do
+          it 'return the user first name' do
             expect(User.last.first_name).to eql(user.first_name)
           end
 
-          it 'return the user last_name' do
+          it 'return the user last name' do
             expect(User.last.last_name).to eql(user.last_name)
           end
 
