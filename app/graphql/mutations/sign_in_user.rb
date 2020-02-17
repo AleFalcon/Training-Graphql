@@ -5,7 +5,6 @@ module Mutations
     argument :email, Types::AuthProviderEmailInput, required: false
 
     field :token, String, null: true
-    field :user, Types::UserType, null: true
 
     def resolve(email: nil)
       user = User.find_by email: email[:email]
