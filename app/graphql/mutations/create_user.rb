@@ -10,11 +10,11 @@ module Mutations
     def resolve(first_name: nil, last_name: nil, email: nil, password: nil)
       user = create_hash_user(first_name, last_name, email, password)
       result = UserPolicy.new(nil, user).create?
-      unless result[:result]
-        raise Pundit::NotAuthorizedError, "not allowed to create? this #{result[:message]}"
+      if result[:result]
+        User.create!(user)
+      else
+        GraphQL::ExecutionError.new("Invalid input: #{result[:message]}")
       end
-
-      User.create!(user)
     end
 
     def create_hash_user(first_name, last_name, email, password)
