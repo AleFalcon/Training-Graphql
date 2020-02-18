@@ -11,8 +11,10 @@ class AlbumsService
     album
   end
 
-  def list_all_albums
-    parse_all_albums(HTTParty.get("#{endpoint}albums/"))
+  def list_album(order_by, offset, limit)
+    albums = parse_all_albums(HTTParty.get("#{endpoint}albums/"))
+    list_new = order_array(apply_limit(apply_offset(albums, offset), limit), order_by)
+    PhotosService.new(endpoint).add_photos_to_album(list_new)
   end
 
   private
@@ -23,5 +25,22 @@ class AlbumsService
 
   def parse_all_albums(response)
     response.parsed_response.map { |x| x.transform_keys(&:underscore) }
+  end
+
+  def apply_limit(list, value)
+    return list.take(value) unless value.nil?
+
+    list
+  end
+
+  def apply_offset(list, value)
+    list.drop(value)
+  end
+
+  def order_array(list, value)
+    list.sort_by! { |x| x[value.to_h[:field].to_s] }
+    return list if value.to_h[:order].zero?
+
+    list.reverse!
   end
 end
