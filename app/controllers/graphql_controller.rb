@@ -4,7 +4,6 @@ class GraphqlController < ApplicationController
   # but you'll have to authenticate your user separately
   # protect_from_forgery with: :null_session
   def execute
-    byebug
     context = {
       # we need to provide session and current user
       cookies: cookies,
