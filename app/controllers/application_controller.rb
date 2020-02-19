@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+include ActionController::Helpers
+include ActionController::Cookies
 
 class ApplicationController < ActionController::API
   around_action :switch_locale
