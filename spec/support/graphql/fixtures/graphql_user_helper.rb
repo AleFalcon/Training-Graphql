@@ -12,16 +12,13 @@ def mutation_creation_user(first_name:, last_name:, email:, password:)
   GQL
 end
 
-def mutation_sign_in(email:)
+def mutation_sign_in(credentials:)
   <<~GQL
     mutation {
       signinUser(
-        email: #{email}
+        credentials: #{credentials}
         ) {
           token
-          user {
-            id
-          }
         }
       }
   GQL

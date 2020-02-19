@@ -2,18 +2,19 @@ module Mutations
   class SignInUser < BaseMutation
     null true
 
-    argument :email, Types::AuthProviderEmailInput, required: false
+    argument :credentials, Types::AuthProviderCredentialsInput, required: false
 
     field :token, String, null: true
-    field :user, Types::UserType, null: true
 
-    def resolve(email: nil)
-      user = User.find_by email: email[:email]
-      return unless validations(email[:email], email[:password], user)
+    def resolve(credentials: nil)
+      user = User.find_by email: credentials[:email]
+      return unless validations(credentials[:email], credentials[:password], user)
 
       token = generate_token(user)
 
-      validation_token(context[:session][:token], token)
+      context[:session][:token] = token
+
+      { token: token }
     end
 
     private
@@ -22,12 +23,6 @@ module Mutations
       crypt = ActiveSupport::MessageEncryptor.new(Rails.application
         .secrets[:secret_key_base].byteslice(0..31))
       crypt.encrypt_and_sign("user-id:#{user.id}")
-    end
-
-    def validation_token(session_token, token)
-      return unless session_token != token
-
-      { token: token }
     end
 
     def validations(email, password, user)

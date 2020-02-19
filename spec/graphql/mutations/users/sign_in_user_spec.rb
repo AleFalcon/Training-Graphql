@@ -13,7 +13,7 @@ module Mutations
                                                                      last_name: user.last_name,
                                                                      email: user.email,
                                                                      password: user.password) }
-            post '/graphql', params: { query: mutation_sign_in(email: create_autho_provider(
+            post '/graphql', params: { query: mutation_sign_in(credentials: create_autho_provider(
               email: user.email.to_json, pass: user.password.to_json
             )) }
           end
@@ -27,7 +27,7 @@ module Mutations
           let(:user) { build(:user) }
 
           before do
-            post '/graphql', params: { query: mutation_sign_in(email: create_autho_provider(
+            post '/graphql', params: { query: mutation_sign_in(credentials: create_autho_provider(
               email: user.email.to_json, pass: user.password.to_json
             )) }
           end
