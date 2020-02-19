@@ -4,10 +4,12 @@ class GraphqlController < ApplicationController
   # but you'll have to authenticate your user separately
   # protect_from_forgery with: :null_session
   def execute
-    context = generate_context(session)
-    result = RailsGraphqlBootstrapSchema.execute(
-      query, variables: variables, context: context, operation_name: operation_name
-    )
+    context = {
+      # we need to provide session and current user
+      session: session,
+      current_user: current_user
+    }
+    result = execute_schema(query, variables, context, operation_name)
     render json: result
   rescue StandardError => e
     raise e unless Rails.env.development?
@@ -17,21 +19,16 @@ class GraphqlController < ApplicationController
 
   private
 
-  def generate_context(session)
-    {
-      session: session,
-      current_user: current_user
-    }
-  end
-
+  # gets current user from token stored in the session
   def current_user
+    # if we want to change the sign-in strategy, this is the place to do it
     return unless session[:token]
 
     crypt = ActiveSupport::MessageEncryptor.new(Rails.application
-      .secrets[:secret_key_base].byteslice(0..31))
+      .credentials.secret_key_base.byteslice(0..31))
     token = crypt.decrypt_and_verify session[:token]
     user_id = token.gsub('user-id:', '').to_i
-    User.find_by id: user_id
+    User.find user_id
   rescue ActiveSupport::MessageVerifier::InvalidSignature
     nil
   end
@@ -50,16 +47,9 @@ class GraphqlController < ApplicationController
     end
   end
 
-  def handle_param_string(param)
-    return ensure_hash(JSON.parse(param)) if param.present?
-
-    {}
-  end
-
   def handle_error_in_development(err)
     logger.error err.message
     logger.error err.backtrace.join("\n")
-
     render json: { error: { message: err.message, backtrace: err.backtrace }, data: {} },
            status: :internal_server_error
   end
@@ -74,5 +64,11 @@ class GraphqlController < ApplicationController
 
   def operation_name
     params[:operationName]
+  end
+
+  def execute_schema(v_query, v_variables, v_context, v_operation_name)
+    RailsGraphqlBootstrapSchema.execute(
+      v_query, variables: v_variables, context: v_context, operation_name: v_operation_name
+    )
   end
 end

@@ -12,11 +12,9 @@ module Mutations
 
       token = generate_token(user)
 
-      return unless context[:session][:token] != token
-
       context[:session][:token] = token
 
-      { token: context[:session][:token] }
+      { token: token }
     end
 
     private
