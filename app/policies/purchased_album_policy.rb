@@ -1,5 +1,9 @@
 class PurchasedAlbumPolicy < ApplicationPolicy
   def create?
-    PurchasedAlbum.where(user: user)
+    unless PurchasedAlbum.where(user: user).count.zero?
+      return { result: false, message: 'The user already bought this book' }
+    end
+
+    { result: true, message: nil }
   end
 end

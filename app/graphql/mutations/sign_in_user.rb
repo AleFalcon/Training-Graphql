@@ -12,7 +12,7 @@ module Mutations
 
       token = generate_token(user)
 
-      context[:session][:token] = token
+      context[:cookies][:token] = token
 
       { token: token }
     end

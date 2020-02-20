@@ -32,3 +32,13 @@ def create_autho_provider(email:, pass:)
     }
   GQL
 end
+
+def create_purchased_album(id:)
+  <<~GQL
+    mutation{
+      buyAlbum(albumId: #{id}){
+        title
+      }
+    }
+  GQL
+end

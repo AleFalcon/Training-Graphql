@@ -4,10 +4,9 @@ class GraphqlController < ApplicationController
   # but you'll have to authenticate your user separately
   # protect_from_forgery with: :null_session
   def execute
-    byebug
     context = {
       # we need to provide session and current user
-      session: session,
+      cookies: cookies,
       current_user: current_user
     }
     result = execute_schema(query, variables, context, operation_name)
@@ -23,10 +22,11 @@ class GraphqlController < ApplicationController
   # gets current user from token stored in the session
   def current_user
     # if we want to change the sign-in strategy, this is the place to do it
-    return unless session[:token]
+    return unless cookies[:token]
 
-    crypt = ActiveSupport::MessageEncryptor.new(Rails.application.secrets[:secret_key_base].byteslice(0..31))
-    token = crypt.decrypt_and_verify session[:token]
+    crypt = ActiveSupport::MessageEncryptor.new(Rails.application
+      .secrets[:secret_key_base].byteslice(0..31))
+    token = crypt.decrypt_and_verify cookies[:token]
     user_id = token.gsub('user-id:', '').to_i
     User.find_by id: user_id
   rescue ActiveSupport::MessageVerifier::InvalidSignature

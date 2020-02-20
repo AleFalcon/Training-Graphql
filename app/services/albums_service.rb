@@ -9,6 +9,10 @@ class AlbumsService
     album
   end
 
+  def get_album_without_photo(id)
+    parse_album(HTTParty.get("#{@endpoint}albums/#{id}"))
+  end
+
   private
 
   def parse_album(response)
