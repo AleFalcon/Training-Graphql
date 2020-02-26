@@ -1,16 +1,22 @@
 class UserPolicy < ApplicationPolicy
   def create?
     unless validation_wolox_domain(record[:email])
-      return { result: false, message: 'email does not belong to wolox.com.ar' }
+      return { result: false,
+        message: I18n.t('pundit.error.creation.user.wolox_domain'),
+        reason: I18n.t('field.email', reason: record[:email]) }
     end
     unless validation_email_unique(record[:email])
-      return { result: false, message: 'email does not unique' }
+      return { result: false,
+        message: I18n.t('pundit.error.creation.user.email_unique'),
+        reason: I18n.t('field.email', reason: record[:email]) }
     end
     unless validation_long_password(record[:password])
-      return { result: false, message: 'password very short' }
+      return { result: false,
+        message: I18n.t('pundit.error.creation.user.long_password'),
+        reason: I18n.t('field.password', reason: record[:password]) }
     end
 
-    { result: true, message: nil }
+    { result: true, message: nil, reason: nil }
   end
 
   def validation_wolox_domain(email)

@@ -8,7 +8,7 @@ module Mutations
       purchase = create_purchased(album_id, context[:current_user])
       result = PurchasedAlbumPolicy.new(context[:current_user].id, purchase).create?
       unless result[:result]
-        raise Pundit::NotAuthorizedError, "not allowed to create? this #{result[:message]}"
+        raise Pundit::NotAuthorizedError, I18n.t('error.creation', message: result[:message]), ""
       end
 
       PurchasedAlbum.create!(purchase)

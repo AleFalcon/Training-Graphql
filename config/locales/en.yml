@@ -30,4 +30,17 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  pundit:
+    error:
+      creation:
+        purchased_book: 'The user already bought this album id: %{album_id}'
+        user:
+          wolox_domain: 'Email does not belong to wolox.com.ar'
+          email_unique: 'Email does not unique'
+          long_password: 'Password very short'
+  error:
+    creation: 'Not allowed to create? %{message}'
+  field:
+    email: 'Email: %{reason}'
+    password: 'Password: %{reason}'
+

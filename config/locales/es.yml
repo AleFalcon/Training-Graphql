@@ -1,0 +1,14 @@
+es:
+  pundit:
+    error:
+      creation: 
+        purchased_book: 'El usuario ya compró este album de id: %{album_id}'
+        user:
+          wolox_domain: 'El email no pertenece al dominio de wolox.com.ar'
+          email_unique: 'El email ya se encuentra registrado'
+          long_password: 'La contraseña es demasiado corta'
+  error:
+    creation: 'No se permite crear el usuario. %{message}'
+  field:
+    email: 'Email: %{reason}'
+    password: 'Contraseña: %{reason}'
