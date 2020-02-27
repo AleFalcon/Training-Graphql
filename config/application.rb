@@ -30,8 +30,8 @@ module RailsGraphqlBootstrap
     # the framework and any gems in your application.
 
     config.middleware.use Rack::Attack
-    config.middleware.use ActionDispatch::Cookies
-    config.middleware.use ActionDispatch::Session::CookieStore, key: '_namespace_key'
+    #config.middleware.use ActionDispatch::Cookies
+    #config.middleware.use ActionDispatch::Session::CookieStore, key: '_namespace_key'
 
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.

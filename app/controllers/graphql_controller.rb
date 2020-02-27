@@ -6,8 +6,8 @@ class GraphqlController < ApplicationController
   def execute
     context = {
       # we need to provide session and current user
-      cookies: cookies,
-      current_user: current_user
+      # cookies: cookies,
+      current_user: current_user,
     }
     result = execute_schema(query, variables, context, operation_name)
     render json: result
@@ -22,11 +22,12 @@ class GraphqlController < ApplicationController
   # gets current user from token stored in the session
   def current_user
     # if we want to change the sign-in strategy, this is the place to do it
-    return unless cookies[:token]
+    
+    return unless request.headers['Token']
 
     crypt = ActiveSupport::MessageEncryptor.new(Rails.application
       .secrets[:secret_key_base].byteslice(0..31))
-    token = crypt.decrypt_and_verify cookies[:token]
+    token = crypt.decrypt_and_verify request.headers['Token']
     user_id = token.gsub('user-id:', '').to_i
     User.find user_id
   rescue ActiveSupport::MessageVerifier::InvalidSignature
