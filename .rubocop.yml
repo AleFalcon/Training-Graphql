@@ -28,8 +28,8 @@ Metrics/BlockLength:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-Naming/VariableNumber:
-  EnforcedStyle: snake_case
-
 RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/ExampleLength:
   Enabled: false
