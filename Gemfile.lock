@@ -115,8 +115,8 @@ GEM
       sprockets-rails
     graphql (1.8.13)
     hashdiff (1.0.0)
-    httparty (0.16.4)
-      mime-types (~> 3.0)
+    httparty (0.21.0)
+      mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
     i18n (1.7.0)
       concurrent-ruby (~> 1.0)
@@ -138,10 +138,9 @@ GEM
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
     method_source (0.9.2)
-    mime-types (3.3.1)
-      mime-types-data (~> 3.2015)
-    mime-types-data (3.2019.1009)
-    mimemagic (0.3.3)
+    mimemagic (0.3.10)
+      nokogiri (~> 1)
+      rake
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
     minitest (5.13.0)
@@ -319,7 +318,7 @@ DEPENDENCIES
   faker
   graphiql-rails (= 1.5.0)
   graphql (= 1.8.13)
-  httparty (~> 0.16.4)
+  httparty (~> 0.21.0)
   listen (>= 3.0.5, < 3.2)
   pg (>= 0.18, < 2.0)
   puma (~> 3.12)
